@@ -1,0 +1,5 @@
+package com.soloProject.mapper;
+
+public interface InquityMapper {
+
+}

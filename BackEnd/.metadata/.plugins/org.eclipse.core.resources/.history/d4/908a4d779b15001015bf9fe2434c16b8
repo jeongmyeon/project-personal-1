@@ -1,0 +1,57 @@
+package com.soloProject.controller;
+
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.soloProject.config.JwtUtil;
+import com.soloProject.service.EmailService;
+import com.soloProject.service.UserService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:5173")
+
+public class UserController {
+	
+	private final UserService userService;
+	private final JwtUtil jwtUtil;
+	private final EmailService emailService;
+	
+	@PostMapping("/verify")
+	public ResponseEntity<String> sendCerificationEmail(@RequestBody Map<String, String> request){
+		String email = request.get("email");
+		userService.sendVerificationEmail(email);
+		return ResponseEntity.ok("이메일 인증코드가 전송되었습니다.");
+	}
+	
+	@PostMapping("/find-id")
+	public ResponseEntity<String> confirmEmail(@RequestBody Map<String, String> request){
+		String email = request.get("email");
+		String code = request.get("code");
+		
+		userService.verifyEmail(email, code);
+		return ResponseEntity.ok("Email verified successfully");
+	}
+	
+	@PostMapping("/find-id")
+	public ResponseEntity<?> findUserId(@RequestBody Map<String, String> request){
+		try {
+			String name = request.get("name");
+			String phoneNumber = request.get("phoneNumber");
+			String userId = userService.findUserIdByNameAndPhone(name, phoneNumber);
+			return ResponseEntity.ok(Map.of("userId",userId));
+		}catch(IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error",e.getMessage()));
+		}
+	}
+	
+}

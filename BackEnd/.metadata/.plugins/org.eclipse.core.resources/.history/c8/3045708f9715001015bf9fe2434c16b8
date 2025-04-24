@@ -1,0 +1,21 @@
+package com.soloProject.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import com.soloProject.model.Inquiry;
+
+@Mapper
+public interface InquityMapper {
+
+	@Select("SELECT * FROM inquiries WHERE user_email = #{email}")
+	List<Inquiry> getUserInquiries(String email);
+	
+	@Select("SELECT * FROM inquiries")
+	List<Inquiry> getAllInquiries();
+	
+	@Select("SELECT * FROM inquiries WHERE id = ${id}")
+	Inquiry findById(Long id);
+}

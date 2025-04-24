@@ -1,0 +1,13 @@
+package com.soloProject.mapper;
+
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+public interface UserMapper {
+	
+	@Select("SELECT email FROM users WHERE name = ${name} AND phone_number = ${phoneNumber}")
+	String findEmailByNameAndPhone(@Param("name") String name, @Param("phoneNumber")String phoneNumber);
+	
+	@Select("SELECT * FROM users WHERE email = #{email}")
+    User findByEmail(String email);
+}
