@@ -95,8 +95,8 @@ public class UserService {
 		return count > 0;
 	}
 	
-	public String findUserIdByNameAndPhone(String name, String phoneNUmber) {
-		String userEmail = userMapper.findEmailByNameAndPhone(name, phoneNUmber);
+	public String findUserIdByNameAndPhone(String userName, String phoneNumber) {
+		String userEmail = userMapper.findEmailByNameAndPhone(userName, phoneNumber);
 		if(userEmail == null) {
 			throw new IllegalArgumentException("입력한 벙보와 일치하는 계정이 없습니다.");
 		}
@@ -104,15 +104,15 @@ public class UserService {
 	}
 	
 	public boolean checkPhoneExists(String phoneNumber) {
-        // ✅ DB에서 하이픈 제거 후 비교하는 방식으로 중복 검사
+        
         int count = userMapper.countByPhoneNumber(phoneNumber);
-        return count > 0; // 0보다 크면 중복
+        return count > 0; 
     }
 	
 	 public Map<String, Object> login(String email, String rawPassword) {
 	        System.out.println("🚀 login() 메서드 실행됨! 입력된 이메일: " + email);
 
-	        // 🔹 1. 유저 정보 가져오기
+	        
 	        User user = userMapper.getUserByEmail(email);
 	        System.out.println("🔍 [DB 조회 결과] user = " + (user != null ? "존재함" : "존재하지 않음"));
 
@@ -131,17 +131,10 @@ public class UserService {
 
 	        System.out.println("✅ 로그인 성공! 유저 ID: " + user.getId() + ", 역할: " + user.getRole());
 
-	        // 🔹 2. 로그인 기록 저장 (관리자 제외)
-	        
-	        
-	       
-
-	        // 🔹 5. JWT 생성
 	        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
 
 	        System.out.println("✅ JWT 토큰 생성 완료: " + token);
 
-	        // 🔹 6. 응답 구성
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("user", user);
 	        response.put("token", token);
@@ -163,5 +156,37 @@ public class UserService {
 		return user;
 	}
 	
+	public void resetPassword(String email, String newPassword) {
+		System.out.println("비밀번호 변경 요청 : " + email);
+		
+		String encryptedPassword = passwordEncoder.encode(newPassword);
+		userMapper.updatePassword(email, encryptedPassword);
+		
+		System.out.println("비밀번호 변경 완료!");
+	}
+	
+	public void sendVerificationCode(String email, String phoneNumber) {
+		if(userMapper.countUserByEmailAndPhone(email, phoneNumber) == 0) {
+			throw new IllegalArgumentException("해당 사용자가 존재하지 않습니다!");
+		}
+		String verificationCode = emailService.generateVerificationCode();
+		System.out.println("인증번호 : " + verificationCode);
+		
+		String existingCode = userMapper.getVerificationCode(email);
+		if(existingCode == null) {
+			System.out.println("기존 인증번호 없음, Insert 실행!");
+			userMapper.saveVerificationCode(email, verificationCode);
+		}else {
+			System.out.println("기존 인증번호 존재, Update 실행!");
+			int updateRows = userMapper.updateVerificationCode(email, verificationCode);
+			
+			if(updateRows == 0) {
+				System.out.println("Update 실패!, Insert 실행!");
+				userMapper.saveVerificationCode(email, verificationCode);
+			}
+		}
+		System.out.println("인증번호 저장! : " + verificationCode);
+		emailService.sendVerificationCode(email, verificationCode);
+	}
 	
 }

@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./header.css"
 import { useEffect, useState } from "react";
 
 export default function Header({isLoggedIn, setIsLoggedIn}){
     const [isAdmin, setIsAdmin] = useState(false);
 
+    const location = useLocation();
     const navigate = useNavigate(); 
 
     useEffect(() => {
@@ -75,7 +76,9 @@ export default function Header({isLoggedIn, setIsLoggedIn}){
                 </div>
             </div>
             <div className="header-menu">
-                <a>암장위치</a>
+                <Link to={"/location"} className={`header-category ${location.pathname === "/location" ? "active" : ""}`}>암장위치</Link>
+                <Link to={"/board"} className={`header-category ${location.pathname === "/board" ? "active" : ""}`} >게시판</Link>
+                <Link to={"/market"} className={`header-category ${location.pathname === "/market" ? "active" : ""}`}>중고장터</Link>
             </div>
         </div>
         

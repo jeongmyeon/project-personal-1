@@ -46,6 +46,21 @@
     padding: 10px 15px;
 }
 
+.header-menu{
+    display: flex;
+    gap: 50px;
+}
+
+.header-category{
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+.header-category.active {
+    font-size: medium;
+    font-weight: bold;
+  }
 
   
 

@@ -61,11 +61,16 @@ public class JwtUtil {
 	public String generateToken(Long userId,String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("id", userId)
+                .claim("id", userId.intValue())
                 .claim("role", "ROLE_" + role)  // ✅ 역할을 토큰에 추가
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10시간 유효
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
+	
+	public Integer extractUserId(String token) {
+	    Claims claims = extractAllClaims(token);
+	    return claims.get("id", Integer.class);
+	}
 }

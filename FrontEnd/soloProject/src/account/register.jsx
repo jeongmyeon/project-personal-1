@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import indexApi from "../api";
+import '../account/register.css';
+import createApi from "../api/api";
+import userApi from "../api/userApi";
 
 export default function RegisterModal({ onClose }) {
     const [email, setEmail] = useState("");
@@ -13,7 +14,9 @@ export default function RegisterModal({ onClose }) {
     const [isCodeSent, setIsCodeSent] = useState(false);
     const [isCodeConfirmed, setIsCodeConfirmed] = useState(false);
 
-    const api = indexApi().userApi; 
+    const api = createApi();
+    const user = userApi(api);
+
 
     const [errors, setErrors] = useState({
         email: "",
@@ -37,7 +40,7 @@ export default function RegisterModal({ onClose }) {
             return;
         }
         try {
-            const response = await api.checkEmailExists(email);
+            const response = await user.checkEmailExists(email);
             console.log("이메일 중복 확인 응답 : ", response.data);
             if (response.data.exists) {
                 setErrors((prev) => ({ ...prev, email: "이미 사용 중인 이메일입니다." }));
@@ -59,7 +62,7 @@ export default function RegisterModal({ onClose }) {
             return;
         }
         try {
-            await api.verifyEmail(email);
+            await user.verifyEmail(email);
             setIsCodeSent(true);
             alert("인증번호가 전송되었습니다.");
         } catch (error) {
@@ -74,7 +77,7 @@ export default function RegisterModal({ onClose }) {
         }
 
         try {
-            const response = await api.confirmEmail(email, code);
+            const response = await user.confirmEmail(email, code);
 
             if (typeof response.data === "string" && response.data.includes("successfully")) {
                 setIsCodeConfirmed(true);
@@ -119,7 +122,7 @@ export default function RegisterModal({ onClose }) {
         console.log("휴대폰 번호 중복 확인 요청", formattedPhone);
 
         try {
-            const response = await api.checkPhoneExists(formattedPhone);
+            const response = await user.checkPhoneExists(formattedPhone);
 
             if (typeof response.data === "boolean") {
                 console.log("중복 체크 결과:", response.data);
@@ -156,7 +159,7 @@ export default function RegisterModal({ onClose }) {
 
             const userData = {
                 email,
-                name,
+                userName : name,
                 phoneNumber,
                 password,
                 isVerified: isCodeConfirmed,
@@ -165,7 +168,7 @@ export default function RegisterModal({ onClose }) {
             const userBlob = new Blob([JSON.stringify(userData)], { type: "application/json" });
             formData.append("user", userBlob);
 
-            const response = await api.register(formData);
+            const response = await user.register(formData);
             console.log("회원가입 응답", response.data);
             alert("회원가입 성공");
             onClose();
@@ -241,7 +244,9 @@ export default function RegisterModal({ onClose }) {
                         className="login2-input"
                     />
                     {errors.phoneNumber && <p className="error-text">{errors.phoneNumber}</p>}
-                    <button className="button-primary" onClick={handleRegister}>회원가입</button>
+                    <div className="register-button-container">
+                        <button className="button-primary" onClick={handleRegister}>회원가입</button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,232 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modals-content {
+  max-height: 600px; 
+  text-align: left;
+  overflow-y: auto; 
+  padding-right: 10px; 
+}
+
+
+.modals-content::-webkit-scrollbar {
+  width: 6px; 
+}
+
+.modals-content::-webkit-scrollbar-thumb {
+  background: #ccc; 
+  border-radius: 10px;
+}
+
+.modals-content::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+.register-modal {
+  background: white;
+  width:30%;
+  padding: 30px;
+  position: relative;
+  text-align: center;
+}
+
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+
+.input-group, .inputss-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.input-group label, .inputss-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.button-primary {
+    white-space: nowrap; 
+    padding: 10px 20px;
+    border: none;
+    background-color: #FFA575;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    color:white;
+    margin-top: 10px;
+    
+}
+
+.button-primary:hover {
+  background-color: #ff9d68;
+}
+
+.register-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login2-input{
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  font-family: 'NEXON Lv1 Gothic OTF';
+  margin-right: 0;
+}
+
+.login2-input:focus{
+  border-color: #ff9861;
+  outline: none;
+}
+
+
+.button-secondary {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+  background-color: #EEEEEE;
+  color: #5e5e5e;
+}
+.button-secondary:hover {
+  background-color: #D2D2D2; 
+}
+
+.buttonr-container{
+  text-align: center;
+}
+
+
+.input-box {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.input-box:focus {
+  border-color: #ff914d;
+  outline: none;
+}
+
+
+.secondary-button {
+  background: #ddd;
+  color: black;
+}
+
+.secondary-button:hover {
+  background: #bbb;
+}
+
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+
+.error-text {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.input-row .input-box {
+  flex: 1;
+}
+
+
+.image-upload-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.image-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 10px;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-label {
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: #FFA575;
+  margin-bottom: 40px;
+}
+
+.upload-label:hover {
+  background-color: #ff9d68;
+}
+
+.upload-label input {
+  display: none;
+}
+
+
+@media (max-width: 480px) {
+  .register-modal {
+      padding: 20px;
+      max-width: 95%;
+  }
+  
+  .button-group {
+      flex-direction: column;
+  }
+  
+  .button {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+}

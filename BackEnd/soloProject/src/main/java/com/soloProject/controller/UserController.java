@@ -34,19 +34,19 @@ public class UserController {
 	private final EmailService emailService;
 	
 	@PostMapping("/verify-email")
-	public ResponseEntity<String> sendCerificationEmail(@RequestBody Map<String, String> request){
+	public ResponseEntity<?> sendCerificationEmail(@RequestBody Map<String, String> request){
 		String email = request.get("email");
 		userService.sendVerificationEmail(email);
-		return ResponseEntity.ok("이메일 인증코드가 전송되었습니다.");
+		return ResponseEntity.ok(Map.of("success", true, "message", "이메일 인증코드가 전송되었습니다."));
 	}
 	
 	@PostMapping("/confirm-email")
-	public ResponseEntity<String> confirmEmail(@RequestBody Map<String, String> request){
+	public ResponseEntity<?> confirmEmail(@RequestBody Map<String, String> request){
 		String email = request.get("email");
 		String code = request.get("code");
 		
 		userService.verifyEmail(email, code);
-		return ResponseEntity.ok("Email verified successfully");
+		return ResponseEntity.ok(Map.of("success", true, "message", "이메일 인증 성공"));
 	}
 	 
 	@PostMapping("/find-id")
@@ -55,31 +55,30 @@ public class UserController {
 			String name = request.get("name");
 			String phoneNumber = request.get("phoneNumber");
 			String userId = userService.findUserIdByNameAndPhone(name, phoneNumber);
-			return ResponseEntity.ok(Map.of("userId",userId));
+			return ResponseEntity.ok(Map.of("success", true, "userId", userId));
 		}catch(IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error",e.getMessage()));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", e.getMessage()));
 		}
 	}
 	
 	@GetMapping("/check-email")
-    public ResponseEntity<Map<String, Boolean>> checkEmailExists(@RequestParam String email) {
+    public ResponseEntity<?> checkEmailExists(@RequestParam String email) {
         boolean exists = userService.checkEmailExists(email);
         Map<String, Boolean> response = new HashMap<>();
         response.put("exists", exists);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Map.of("success", true, "exists", exists));
     }
 	
 	@GetMapping("/check-phone")
-    public ResponseEntity<Boolean> checkPhoneExists(@RequestParam String phoneNumber) {
+    public ResponseEntity<?> checkPhoneExists(@RequestParam String phoneNumber) {
         boolean exists = userService.checkPhoneExists(phoneNumber);
-        return ResponseEntity.ok(exists);
+        return ResponseEntity.ok(Map.of("success", true, "exists", exists));
     }
 	
 	@PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
         System.out.println("🔐 [컨트롤러] 로그인 요청됨 - 이메일: " + user.getEmail());
 
-        // 🔥 login() 메서드로 로그인 처리 (여기서 로그인 기록 등 전부 처리됨)
         Map<String, Object> result = userService.login(user.getEmail(), user.getPassword());
 
         System.out.println("✅ [컨트롤러] 로그인 완료 후 응답 반환");
@@ -93,11 +92,11 @@ public class UserController {
 	        
 	        String hashedPassword = userService.getHashedPasswordByEmail(email);
 	        if (hashedPassword == null) {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일이 존재하지 않습니다.");
+	        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", "이메일이 존재하지 않습니다."));
 	        }
 
 	        System.out.println("🔹 [백엔드] 조회된 해시된 비밀번호: " + hashedPassword);
-	        return ResponseEntity.ok(Map.of("password", hashedPassword));
+	        return ResponseEntity.ok(Map.of("success", true, "password", hashedPassword));
 	    }
 	 
 	 @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -106,15 +105,32 @@ public class UserController {
 
 	        System.out.println("✅ 회원가입 요청 데이터: " + user);
 	        userService.registerUser(user);
-	        return ResponseEntity.ok("회원가입 성공!");
+	        return ResponseEntity.ok(Map.of("success", true, "message", "회원가입 성공!"));
 	    }
 
 	 @GetMapping("/get-user")
 	 	public ResponseEntity<?> getUserByEmail(@RequestParam String email){
 		 User user = userService.getUserByEmail(email);
 		 if(user == null) {
-			 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+			 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false, "message", "사용자를 찾을 수 없습니다."));
 		 }
 		 return ResponseEntity.ok(user);
+	 }
+	 
+	 @PostMapping("/reset-password")
+	 public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request){
+		 String email = request.get("email");
+		 String newPassword = request.get("newPassword");
+		 
+		 userService.resetPassword(email, newPassword);
+		 return ResponseEntity.ok(Map.of("success", true, "message", "비밀번호 재설정 성공!"));
+	 }
+	 
+	 @PostMapping("/send-verification-code")
+	 public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> request){
+		 String email = request.get("email");
+		 String phoneNumber = request.get("phoneNumber");
+		 userService.sendVerificationCode(email, phoneNumber); 
+		 return ResponseEntity.ok(Map.of("success", true, "message","인증 코드 전송 성공!"));
 	 }
 }

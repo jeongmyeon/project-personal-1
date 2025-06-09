@@ -41,9 +41,9 @@ public class SecurityConfig {
 			.requestMatchers("/app/**","/topic/**").permitAll()
 			.requestMatchers(HttpMethod.GET, "/user/get-hasheds-password").permitAll()
 			.requestMatchers("/user/login","/user/register","/user/find-id","/user/send-verification-code","/user/verify-email","/user/comfirm-email",
-					"/user/check-email","/user/check-phone").permitAll()
+					"/user/check-email","/user/check-phone","/board/delete/{id}","/board/edit/{id}").permitAll()
 			.requestMatchers("/admin/**").hasRole("ADMIN")
-			.requestMatchers("/user/inquiries","/user/notifications/**","/user/**").permitAll()
+			.requestMatchers("/user/inquiries","/user/notifications/**","/user/**","/board/get","board/{id}").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -3,6 +3,9 @@ import { useState } from "react";
 import RegisterModal from "./register";
 import { useNavigate } from "react-router-dom";
 import indexApi from "../api";
+import '../account/login.css';
+import userApi from "../api/userApi";
+import createApi from "../api/api";
 
 
 
@@ -11,7 +14,8 @@ export default function Login({setIsLoggedIn}){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const {userApi} = indexApi();
+    const api = createApi();
+    const user = userApi(api);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -23,7 +27,7 @@ export default function Login({setIsLoggedIn}){
 
     const handleLogin = async() => {
         try{
-            const response = await userApi.login({email, password});
+            const response = await user.login({email, password});
 
             console.log("로그인 응답", response.data);
 

@@ -1,0 +1,52 @@
+.board-write-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.board-write-header {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.board-write-form-group {
+  margin-bottom: 15px;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.board-write-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+
+.board-write-register{
+    display: block;
+    margin: 0 auto;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: bisque;
+    cursor: pointer;
+}
+
+.board-write-form-group input,
+.board-write-form-group textarea {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-top: 10px;;
+}
