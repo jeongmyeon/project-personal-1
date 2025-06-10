@@ -21,7 +21,7 @@ export default function BoardDetail(){
         if(token){
             try{
                 const decoded = jwtDecode(token);
-                console.log("decoded:", decoded); // ✅ 이거 추가해보세요
+                console.log("decoded:", decoded); 
                 console.log("decoded.userId:", decoded.userId)
                 setUserId(decoded.id);
             }catch(error){

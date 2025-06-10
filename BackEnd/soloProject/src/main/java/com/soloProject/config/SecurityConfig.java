@@ -43,7 +43,7 @@ public class SecurityConfig {
 			.requestMatchers("/user/login","/user/register","/user/find-id","/user/send-verification-code","/user/verify-email","/user/comfirm-email",
 					"/user/check-email","/user/check-phone","/board/delete/{id}","/board/edit/{id}").permitAll()
 			.requestMatchers("/admin/**").hasRole("ADMIN")
-			.requestMatchers("/user/inquiries","/user/notifications/**","/user/**","/board/get","board/{id}").permitAll()
+			.requestMatchers("/user/inquiries","/user/notifications/**","/user/**","/board/get","board/{id}","/location/get","/location/route").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

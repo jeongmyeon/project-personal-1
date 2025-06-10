@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useState } from "react";
 import RegisterModal from "./register";
 import { useNavigate } from "react-router-dom";
-import indexApi from "../api";
 import '../account/login.css';
 import userApi from "../api/userApi";
 import createApi from "../api/api";
