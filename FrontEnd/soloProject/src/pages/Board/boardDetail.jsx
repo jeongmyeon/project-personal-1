@@ -13,6 +13,11 @@ export default function BoardDetail(){
     const [editedTitle, setEditedTitle] = useState('');
     const [editedContent, setEditedContent] = useState('');
     const [userId, setUserId] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [newReview, setNewReview] = useState('');
+    const [editedReviewId, setEditedReviewId] = useState(null);
+    const [editedReviewText, setEditedReviewText] = useState('');
+
     const api = createApi();
     const board = boardApi(api);
 
@@ -22,13 +27,14 @@ export default function BoardDetail(){
             try{
                 const decoded = jwtDecode(token);
                 console.log("decoded:", decoded); 
-                console.log("decoded.userId:", decoded.userId)
                 setUserId(decoded.id);
             }catch(error){
                 console.error('토큰 디코딩 오류:', error);
                 setUserId(null);
             }
         }
+
+        // 게시글
         board.getBoardDetail(id).then(response => {
             if(response.data.success){
                 setBoardDetail(response.data.board);
@@ -41,6 +47,17 @@ export default function BoardDetail(){
             console.error('게시글 불러오기 오류:', error);
             alert('게시글을 불러오는 중 오류가 발생했습니다.');
         });
+        
+        // 리뷰
+        board.getReviews(id).then(response => {
+            if(response.data.success){
+                setReviews(response.data.reviews);
+            }else{
+                console.error("리뷰를 불러오는데 실패했습니다.");
+            }
+        }).catch(error => {
+            console.error("리뷰 불러오기 오류", error);
+        })
     }, [id]);
 
     if(!boardDetail) {
@@ -49,9 +66,7 @@ export default function BoardDetail(){
 
     const isOwner = userId === boardDetail.userId;
 
-    const handleEdit = () => {
-        setIsEdit(true);
-    };
+    const handleEdit = () => setIsEdit(true);
 
     const handleCancelEdit = () => {
         setEditedTitle(boardDetail.title);
@@ -75,7 +90,6 @@ export default function BoardDetail(){
                     title: editedTitle,
                     content: editedContent
                 }));
-                setIsEdit(false);
             } else {
                 alert('게시글 수정에 실패했습니다.');
             }
@@ -100,6 +114,86 @@ export default function BoardDetail(){
                 alert('게시글 삭제 중 오류가 발생했습니다.');
             });
         }
+    }
+
+    const handleAddReview = () => {
+        if(newReview.trim() === ''){
+            alert('리뷰를 입력해주세요');
+            return;
+        }
+        board.addReview(id, {reviewText : newReview}).then(response => {
+            if(response.data.success){
+                setNewReview('');
+                return board.getReviews(id);
+            }else{
+                throw new Error('리뷰 등록 실패');
+            }
+        }).then(res => {
+            if(res.data.success){
+                setReviews(res.data.reviews);
+            }
+        }).catch(error => {
+            console.error('리뷰 등록 오류:' , error);
+            alert('리뷰 등록 중 오류 발생');
+        });
+    }
+
+    const handleEditReview = (reviewId, currentText) => {
+        setEditedReviewId(reviewId);
+        setEditedReviewText(currentText);
+    }
+
+    const handleCancelEditReview  = () => {
+        setEditedReviewId(null);
+        setEditedReviewText('');
+    }
+
+    const handleSaveEditedReview = (editedReviewId) => {
+        if(editedReviewText.trim() === ''){
+            alert('리뷰를 입력하세요');
+            return;
+        }
+
+        board.updateReview(editedReviewId, {reviewText: editedReviewText})
+            .then((res) => {
+                if(res.data.success){
+                    alert('리뷰가 수정되었습니다.');
+                    setEditedReviewId(null);
+                    return board.getReviews(id);
+                }else{
+                    throw new Error('리뷰 수정 실패');
+                }
+            })
+            .then((res) => {
+                if(res.data.success){
+                    setReviews(res.data.reviews);
+                }
+            }).catch((error) => {
+                console.error('리뷰 수정 오류 :'+ error);
+                alert('리뷰 수정 중 오류 발생!');
+            })
+    }
+
+    const handleDeleteReview = (reviewId) => {
+        if(!window.confirm('리뷰를 삭제하시겠습니까?')) return;
+
+        board.deleteReview(reviewId)
+            .then((res) => {
+                if(res.data.success){
+                    alert('리뷰가 삭제되었습니다.');
+                    return board.getReviews(id)
+                }else{
+                    throw new Error('리뷰 삭제 실패');
+                }
+            })
+            .then((res) => {
+                if(res.data.success){
+                    setReviews(res.data.reviews);
+                }
+            }).catch((error) => {
+                console.error('리뷰 삭제 오류 : ' + error);
+                alert('리뷰 삭제 중 오류 발생');
+            })
     }
 
     return(
@@ -143,6 +237,57 @@ export default function BoardDetail(){
             )}
             </>
             )}
+            <hr/>
+            <div className="board-review">
+                {reviews.length == 0 ? (
+                    <p>등록된 리뷰가 없습니다.</p>
+                ) : (
+                    <ul className="review-list">
+                        {reviews.map((review) =>(
+                            <li key={review.reviewId} className="review-item">
+                                <div className="review-header">
+                            
+                                    <strong className="review-name">{review.userName}</strong>
+                                    <small className="review-date">{review.createdAt}</small>
+                                
+                                </div>
+                                {editedReviewId === review.reviewId ? (
+                                    <>
+                                        <textarea
+                                            value={editedReviewText}
+                                            onChange={(e) => setEditedReviewText(e.target.value)}
+                                            rows={3}/>
+                                    <button onClick={ () => handleSaveEditedReview(review.reviewId)}>저장</button>
+                                    <button onClick={handleCancelEditReview}>취소</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="review-text">{review.reviewText}</p>
+                                        {userId === review.userId && (
+                                            <div className="review-action">
+                                                <button onClick={() => handleEditReview(review.reviewId, review.reviewText)}>수정</button>
+                                                <button onClick={() => handleDeleteReview(review.reviewId)}>삭제</button>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+                {userId ? (
+                    <div className="review-form">
+                        <textarea
+                            value={newReview}
+                            onChange={(e) => setNewReview(e.target.value)}
+                            placeholder="리뷰를 작성해주세요"
+                            rows={3}/>
+                            <button onClick={handleAddReview}>등록</button>
+                    </div>
+                ) : (
+                    <p>로그인 후 리뷰를 작성할 수 있습니다.</p>
+                )}
+            </div>
         </div>
     )
 }

@@ -24,10 +24,20 @@ export default function Board(){
         });
     },[])
 
+    const handleWrite = () =>{
+        const user = localStorage.getItem('token');
+        if(!user){
+            alert('로그인이 필요합니다.');
+            navigate('/login');
+        }else{
+            navigate('/board/write');
+        }
+    };
+
     return(
         <div>
             <div className="board-main">
-                <h1>게시판</h1>
+                <h1>자유 게시판</h1>
                 <table className="board-table">
                     <thead>
                         <tr>
@@ -57,7 +67,8 @@ export default function Board(){
                     </tbody>
                 </table>
                 <div className="board-register">
-                    <button className="board-register-btn" onClick={() => navigate('/board/write')}>글쓰기</button>
+                    <button className="board-register-btn" onClick={handleWrite}>
+                    글쓰기</button>
                 </div>    
             </div>
         </div>

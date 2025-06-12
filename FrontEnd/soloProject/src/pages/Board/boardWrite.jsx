@@ -1,5 +1,4 @@
-import api from "../../api/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import boardApi from "../../api/boardApi";
 import createApi from "../../api/api";
@@ -15,6 +14,13 @@ export default function BoardWrite(){
     const api = createApi();
     const board = boardApi(api);
 
+    useEffect(() => {
+        const user = localStorage.getItem('user');
+        if(!user){
+            alert('로그인이 필요합니다.');
+            navigate('/login');
+        }
+    },[]);
 
     const handleSubmit = (e) =>{
         e.preventDefault();

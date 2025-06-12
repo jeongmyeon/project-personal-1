@@ -79,12 +79,6 @@ export default function Location(){
                     });
 
                     window.kakao.maps.event.addListener(marker, 'click', () => {
-                        infowindow.setContent(`
-                            <div style="padding:2px;" font-size:8px;">
-                            <strong>${loc.name}</strong>
-                            <button onclick="window.selectRoute('walk', ${loc.latitude}, ${loc.longitude}, '${loc.name}')">도보</button>
-                            <button onclick="window.selectRoute('car', ${loc.latitude}, ${loc.longitude}, '${loc.name}')">차량</button>
-                            </div>`);
                         infowindow.open(mapInstance.current,marker);
 
                         const origin = new window.kakao.maps.LatLng(currentLatRef.current, currentLngRef.current);
@@ -147,7 +141,7 @@ export default function Location(){
 
                             infowindow.setContent(`
                                 <div style="padding:4px; font-size:12px;">
-                                ${loc.name}<br/>
+                                <strong>${loc.name}</strong><br/>
                                 도보거리 : ${distance}km<br/>
                                 소요시간 : ${duration}분
                                 </div>`);
