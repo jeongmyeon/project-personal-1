@@ -99,23 +99,6 @@ export default function BoardDetail(){
         });
     }
 
-
-    const handleDelete = (boardId) => {
-        if(window.confirm('정말로 삭제하시겠습니까?')){
-            board.deleteBoard(boardId).then(response => {
-                if(response.data.success){
-                    alert('게시글이 삭제되었습니다.');
-                    window.location.href = '/board';
-                } else {
-                    alert('게시글 삭제에 실패했습니다.');
-                }
-            }).catch(error => {
-                console.error('게시글 삭제 오류:', error);
-                alert('게시글 삭제 중 오류가 발생했습니다.');
-            });
-        }
-    }
-
     const handleAddReview = () => {
         if(newReview.trim() === ''){
             alert('리뷰를 입력해주세요');
@@ -232,7 +215,6 @@ export default function BoardDetail(){
             {isOwner && (
             <div className="board-detail-btn">
                 <button onClick={() => handleEdit(boardDetail.boardId)}>수정</button>
-                <button onClick={() => handleDelete(boardDetail.boardId)}>삭제</button>
             </div>
             )}
             </>

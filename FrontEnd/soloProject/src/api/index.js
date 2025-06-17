@@ -1,6 +1,8 @@
 import createApi from "./api"; 
 import boardApi from "./boardApi";
 import locationApi from "./locationApi";
+import marketApi from "./marketApi";
+import mypageApi from "./mypageApi";
 
 import userApi from "./userApi";  
 
@@ -11,10 +13,14 @@ export default function indexApi() {
     const user = userApi(axiosApi);
     const board = boardApi(axiosApi);
     const location = locationApi(axiosApi);
+    const market = marketApi(axiosApi);
+    const mypage = mypageApi(axiosApi);
 
     return {
         userApi: user,
         boardApi: board,  
         locationApi: location,
+        marketApi : market,
+        mypateApi : mypage,
     };
 }

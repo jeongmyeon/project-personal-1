@@ -40,14 +40,6 @@ export default function Mypage(){
 
     return(
         <div className="mypage-container">
-            <div className="sidebar">
-                <ul>
-                    <li><a href="/mypage">내 정보</a></li>
-                    <li><a href="/mypage/orders">주문 내역</a></li>
-                    <li><a href="/mypage/settings">설정</a></li>
-                    {/* 다른 페이지 링크 추가 가능 */}
-                </ul>
-            </div>
             <div className="main-content">
                 <h1>마이페이지</h1>
                 <div className="user-info">

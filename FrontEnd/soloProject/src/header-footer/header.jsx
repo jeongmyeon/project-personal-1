@@ -65,7 +65,7 @@ export default function Header({isLoggedIn, setIsLoggedIn}){
                 <div className="login">
                     {isLoggedIn ? (
                         <>
-                            <button onClick={()=> navigate('/mypage')}>마이페이지</button>
+                            <button onClick={()=> navigate('/mypagelayout')}>마이페이지</button>
                             <button onClick={handleLogout} className="logout-btn">로그아웃</button>
                         </>
                     ) : (

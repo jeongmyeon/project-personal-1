@@ -1,0 +1,43 @@
+.myboard-container{
+    text-align: center;
+    padding: 10px;
+}
+
+.myboard-content{
+    flex-grow: 1;
+}
+
+.myboard-content ul{
+    list-style: none;
+}
+
+.myboard-content li{
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 20px;
+    align-items: center;
+}
+
+.myboard-content li p{
+    font-size: smaller;
+}
+
+.board-left {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  text-align: left;
+  box-shadow: 0 2px 6px bisque;
+}
+
+.board-right button {
+  background-color: bisque;
+  color: black;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}

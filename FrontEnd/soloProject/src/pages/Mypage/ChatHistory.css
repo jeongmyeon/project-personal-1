@@ -1,0 +1,26 @@
+.chat-history-container h2{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.chatroom-list{
+    list-style: none;
+    padding: 10px 10px;
+}
+
+.chatroom-item{
+    margin-bottom: 20px;
+    border: 1px solid bisque;
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0 5px 8px bisque;
+}
+
+.chatroom-item:hover {
+    background-color: #f0f0f0;
+}
+
+.chatroom-item.unread {
+    background-color: #ffe8e8;
+    font-weight: bold;
+}

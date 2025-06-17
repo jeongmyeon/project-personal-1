@@ -1,0 +1,40 @@
+.mymarket-container{
+    text-align: center;
+    padding: 10px;
+}
+
+
+.mymarket-content ul{
+    list-style: none;
+}
+
+.mymarket-content li{
+   padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 20px;
+    align-items: center;
+}
+
+.mymarket-content li p{
+    font-size: smaller;
+}
+
+.market-left {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  text-align: left;
+  box-shadow: 0 2px 6px bisque;
+}
+
+.market-right button {
+  background-color: bisque;
+  color: black;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}

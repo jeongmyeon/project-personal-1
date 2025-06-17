@@ -74,18 +74,7 @@ public class BoardController {
 		}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getBoardDetail(@PathVariable int id, HttpServletRequest request){
-		String authHeader = request.getHeader("Authorization");
-		Integer userId = null;
-		
-		if(authHeader != null && authHeader.startsWith("Bearer ")) {
-			String token = authHeader.substring(7);
-			try {
-				userId = jwtUtil.extractUserId(token);
-			}catch(Exception e) {
-				
-			}
-		}
+	public ResponseEntity<?> getBoardDetail(@PathVariable int id){
 		Board board = boardService.getBoardById(id);
 		if(board != null) {
 			return ResponseEntity.ok().body(Map.of("success",true,"board",board));

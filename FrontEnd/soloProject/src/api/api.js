@@ -5,14 +5,17 @@ export default function createApi() {
 
     const api = axios.create({
         baseURL: API_BASE_URL,
-        headers: {
-            "Content-Type": "application/json",
-        },
         withCredentials: true,
     });
 
     api.interceptors.request.use(
         (config) => {
+            if(config.data instanceof FormData){
+                config.headers['Content-Type'] = 'multipart/form-data';
+            }else if(config.data && typeof config.data === 'object'){
+                config.headers['Content-Type'] = 'application/json';
+            }
+
             const token = localStorage.getItem("token");
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
