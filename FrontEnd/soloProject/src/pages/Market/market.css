@@ -46,7 +46,7 @@
 }
 
 .product-card {
-    width: 200px;
+    width: 300px;
     border: 1px solid #ccc;
     border-radius: 12px;
     padding: 16px;
@@ -54,6 +54,10 @@
     text-align: center;
     transition: transform 0.2s;
     background-color: #fff;
+}
+
+.product-card h3{
+    margin-top: 10px;
 }
 
 .product-card:hover {
@@ -64,4 +68,17 @@
     width: 100%;
     height: auto;
     border-radius: 8px;
+}
+
+.favorite-btn{
+    border: none;
+    padding: 5px;
+    background-color: white;
+    color: red;
+}
+
+.favorite-area{
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
 }

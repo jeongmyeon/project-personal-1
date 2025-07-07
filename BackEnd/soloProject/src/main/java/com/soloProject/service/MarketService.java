@@ -36,4 +36,8 @@ public class MarketService {
 		int result = marketMapper.updateMarket(market);
 		return result == 1;
 	}
+	
+	public List<Market> getLatestMartkets(int limit){
+		return marketMapper.findLatestMarket(limit);
+	}
 }

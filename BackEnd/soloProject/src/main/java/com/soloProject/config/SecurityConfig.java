@@ -42,10 +42,12 @@ public class SecurityConfig {
 			.requestMatchers(HttpMethod.GET, "/user/get-hasheds-password").permitAll()
 			.requestMatchers("/user/login","/user/register","/user/find-id","/user/send-verification-code","/user/verify-email","/user/comfirm-email",
 					"/user/check-email","/user/check-phone","/board/delete/{id}","/board/edit/{id}","/board/write","/board/review/add/{boardId}"
-					,"/board/review/{reviewId}","/market/add","/ws-chat/**","/mypage/getmarket","/mypage/getboard").permitAll()
+					,"/board/review/{reviewId}","/market/add","/ws-chat/**","/mypage/getmarket","/mypage/getboard","/board/recommend/{boardId}"
+					).permitAll()
 			.requestMatchers("/admin/**").hasRole("ADMIN")
 			.requestMatchers("/user/inquiries","/user/notifications/**","/user/**","/board/get","board/{id}","/location/get","/location/route"
-					,"/board/review/{id}","/market/get","/market/{id}","/chat/room/{roomId}/messages","/chat/chat.sendMessage","/chat/chatroom").permitAll()
+					,"/board/review/{id}","/market/get","/market/{id}","/chat/room/{roomId}/messages","/chat/chat.sendMessage","/chat/chatroom"
+					,"/market/favorite/add/{marketId}","/market/favorite/delete/{marketId}","/market/favorite/get").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

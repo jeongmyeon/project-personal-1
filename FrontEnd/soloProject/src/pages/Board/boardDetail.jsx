@@ -17,6 +17,7 @@ export default function BoardDetail(){
     const [newReview, setNewReview] = useState('');
     const [editedReviewId, setEditedReviewId] = useState(null);
     const [editedReviewText, setEditedReviewText] = useState('');
+    const [recommendCount, setRecommendCount] = useState(0);
 
     const api = createApi();
     const board = boardApi(api);
@@ -59,6 +60,12 @@ export default function BoardDetail(){
             console.error("리뷰 불러오기 오류", error);
         })
     }, [id]);
+
+    useEffect(() => {
+        if(boardDetail){
+            setRecommendCount(boardDetail.likes || 0);
+        }
+    },[boardDetail]);
 
     if(!boardDetail) {
         return <div>Loading...</div>;
@@ -179,6 +186,19 @@ export default function BoardDetail(){
             })
     }
 
+    const handleRecommend = () => {
+        board.recommendBoard(boardDetail.boardId).then((res) => {
+            if(res.data.success){
+                setRecommendCount(prev => prev + 1);
+            }else{
+                alert('추천 실패');
+            }
+        }).catch(error => {
+            console.error('추천 오류 :',error);
+            alert('추천 중 오류 발생');
+        });
+    }
+
     return(
         <div className="board-detail-container">
             {isEdit ? (
@@ -202,7 +222,11 @@ export default function BoardDetail(){
                 </>
         ):(
             <>
-            <h2 className="board-detail-title">{boardDetail.title}</h2>
+            <div className="board-detail-title">
+            <button onClick={() => handleRecommend(boardDetail.boardId)}>추천 : {recommendCount}</button>
+            <h2>{boardDetail.title}
+            </h2>
+            </div>
             <div className="board-detail-header">
             <p>작성자 : {boardDetail.userName}</p>
             <p>조회수 : {boardDetail.views}</p>
@@ -257,18 +281,14 @@ export default function BoardDetail(){
                         ))}
                     </ul>
                 )}
-                {userId ? (
                     <div className="review-form">
                         <textarea
                             value={newReview}
                             onChange={(e) => setNewReview(e.target.value)}
-                            placeholder="리뷰를 작성해주세요"
+                            placeholder={userId ? "리뷰를 작성해주세요" : "로그인 후 리뷰를 작성할 수 있습니다."}
                             rows={3}/>
-                            <button onClick={handleAddReview}>등록</button>
+                            <button onClick={handleAddReview} disabled={!userId}>등록</button>
                     </div>
-                ) : (
-                    <p>로그인 후 리뷰를 작성할 수 있습니다.</p>
-                )}
             </div>
         </div>
     )

@@ -12,5 +12,7 @@ export default function boardApi(api){
         addReview: (boardId,data) => api.post(`/board/review/add/${boardId}`,data),
         deleteReview: (reviewId) => api.delete(`/board/review/${reviewId}`),
         updateReview : (reviewId,data) => api.put(`/board/review/${reviewId}`,data),
+        recommendBoard : (boardId) => api.post(`/board/recommend/${boardId}`),
+        getrecommendBoard : () => api.get(`/board/recommend/get`),
     }
 }

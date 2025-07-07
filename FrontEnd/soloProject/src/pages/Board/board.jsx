@@ -45,6 +45,7 @@ export default function Board(){
                             <th>제목</th>
                             <th>작성자</th>
                             <th>작성일</th>
+                            <th>추천</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,6 +62,7 @@ export default function Board(){
                                     <td>{board.title}</td>
                                     <td>{board.userName}</td>
                                     <td>{board.createdAt}</td>
+                                    <td>{board.likes}</td>
                                 </tr>
                             ))
                         )}

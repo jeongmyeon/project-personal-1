@@ -106,4 +106,14 @@ CREATE TABLE chatMessage (
     receiverId BIGINT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE market_favorites (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    marketId INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (marketId) REFERENCES market(marketId) ON DELETE CASCADE,
+    UNIQUE(userId, marketId)
+);
 		 

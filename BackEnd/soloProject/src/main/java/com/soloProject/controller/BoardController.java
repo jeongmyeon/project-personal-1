@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.soloProject.config.JwtUtil;
@@ -154,6 +155,23 @@ public class BoardController {
 	    } else {
 	        return ResponseEntity.badRequest().body(Map.of("success", false, "message", "게시글 수정 실패"));
 	    }
+	}
+	
+	@PostMapping("/recommend/{boardId}")
+	public ResponseEntity<?> recommendBoard(@PathVariable Long boardId){
+		try {
+			boardService.incrementRecommendCount(boardId);
+			return ResponseEntity.ok(Map.of("success",true));
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("success",false,"message",e.getMessage()));
+		}
+	}
+	
+	@GetMapping("/recommend/get")
+	public ResponseEntity<?> recommendGetBoard(@RequestParam(defaultValue = "5") int limit){
+		List<Board> recommendBoards = boardService.getRecommendBoards(limit);
+		return ResponseEntity.ok().body(Map.of("success",true,"board",recommendBoards));
 	}
 }
 

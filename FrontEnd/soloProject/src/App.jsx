@@ -20,6 +20,7 @@ import MypageLayout from './pages/Mypage/MypageLayout';
 import MyMarket from './pages/Mypage/MyMarket';
 import MyBoard from './pages/Mypage/MyBoard';
 import MarketEdit from './pages/Market/marketEdit';
+import Favorite from './pages/Mypage/Favorite';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -48,6 +49,7 @@ function App() {
             <Route path='chathistory' element={<ChatHistory/>}/>
             <Route path='mymarket' element={<MyMarket/>}/>
             <Route path='myboard' element={<MyBoard/>}/>
+            <Route path='favorite' element={<Favorite/>}/>
           </Route>
      </Routes>
     </>

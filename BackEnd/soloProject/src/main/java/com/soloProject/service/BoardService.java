@@ -40,4 +40,15 @@ public class BoardService {
 	    int result = boardMapper.updateBoard(board);
 	    return result == 1;
 	}
+	
+	public void incrementRecommendCount(Long boardId) {
+		int updateRows = boardMapper.incrementRecommend(boardId);
+		if(updateRows != 1) {
+			throw new RuntimeException("추천 증가 실패");
+		}
+	}
+	
+	public List<Board> getRecommendBoards(int limit){
+		return boardMapper.findRecommendBoard(limit);
+	}
 }

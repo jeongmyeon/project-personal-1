@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.soloProject.config.JwtUtil;
 import com.soloProject.model.Market;
+import com.soloProject.service.FavoriteService;
 import com.soloProject.service.MarketService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ public class MarketController {
 	
 	private final JwtUtil jwtUtil;
 	private final MarketService marketService;
+	private final FavoriteService favoriteService;
 	
 	@GetMapping("/get")
 	public ResponseEntity<Map<String,Object>> getMarket(){
@@ -193,5 +195,66 @@ public class MarketController {
 		}else {
 			return ResponseEntity.badRequest().body(Map.of("success",false,"message","수정 실패"));
 		}
+	}
+	
+	@GetMapping("/favorite/get")
+	public ResponseEntity<?> isFavorite(HttpServletRequest request){
+		String authHeader = request.getHeader("Authorization");
+		if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+			return ResponseEntity.status(401).body("토큰이 없습니다.");
+		}
+		String token = authHeader.substring(7);
+		Integer userId;
+		try {
+			userId = jwtUtil.extractUserId(token);
+		}catch(Exception e) {
+			return ResponseEntity.status(401).body("유효하지 않은 토큰입니다.");
+		}
+		
+		List<Long> favoriteMarketIds = favoriteService.getFavoriteMarketIds(userId);
+		
+		List<Market> favoriteMarkets = favoriteService.getMarketsById(favoriteMarketIds);
+		return ResponseEntity.ok(Map.of("success",true,"favorites",favoriteMarkets));
+	}
+	
+	@PostMapping("/favorite/add/{marketId}")
+	public ResponseEntity<?> addFavorite(@PathVariable Long marketId, HttpServletRequest request){
+		String authHeader = request.getHeader("Authorization");
+		if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+			return ResponseEntity.status(401).body("토큰이 없습니다.");
+		}
+		String token = authHeader.substring(7);
+		Integer userId;
+		try {
+			userId = jwtUtil.extractUserId(token);
+		}catch(Exception e) {
+			return ResponseEntity.status(401).body("유효하지 않은 토큰입니다.");
+		}
+		
+		favoriteService.addFavorite(userId, marketId);
+		return ResponseEntity.ok(Map.of("success",true,"message","추가 완료"));
+	}
+	
+	@DeleteMapping("/favorite/delete/{marketId}")
+	public ResponseEntity<?> removeFavorite(@PathVariable Long marketId, HttpServletRequest request){
+		String authHeader = request.getHeader("Authorization");
+		if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+			return ResponseEntity.status(401).body("토큰이 없습니다.");
+		}
+		String token = authHeader.substring(7);
+		Integer userId;
+		try {
+			userId = jwtUtil.extractUserId(token);
+		}catch(Exception e) {
+			return ResponseEntity.status(401).body("유효하지 않은 토큰입니다.");
+		}
+		favoriteService.removeFavorite(userId, marketId);
+		return ResponseEntity.ok(Map.of("success",true,"message","삭제 완료"));
+	}
+	
+	@GetMapping("/latest")
+	public ResponseEntity<?> getLatestMarket(@RequestParam(defaultValue = "5") int limit){
+		List<Market> latestMarkets = marketService.getLatestMartkets(limit);
+		return ResponseEntity.ok().body(Map.of("success",true,"market",latestMarkets));
 	}
 }

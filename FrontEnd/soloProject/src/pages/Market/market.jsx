@@ -5,11 +5,12 @@ import createApi from '../../api/api';
 import marketApi from '../../api/marketApi';
 
 export default function Market(){
+    const [markets, setMarkets] = useState([]);
+    const [favorite, setFavorite] = useState(new Set());
 
     const api = createApi();
     const market = marketApi(api);
     const navigate = useNavigate();
-    const [markets, setMarkets] = useState([]);
     
     useEffect( () => {
         market.getMarket().then(response => {
@@ -34,6 +35,61 @@ export default function Market(){
         }
     };
 
+    useEffect(() =>{
+        const token = localStorage.getItem('token');
+        if(token){
+            market.getFavorite()
+                .then(response => {
+                    if(response.data.success){
+                        const ids = response.data.favorites.map(fav => fav.marketId);
+                        setFavorite(new Set(ids));
+                    }else{
+                        console.log("즐겨찾기 로드 실패");
+                    }
+                }).catch(error => {
+                    console.error("즐찾 목록 오류 : ", error);
+                })
+        }
+    },[])
+
+    const toggleFavorite = (marketId) =>{
+        const token = localStorage.getItem('token');
+        if(!token){
+            alert("로그인이 필요합니다.");
+            navigate('/login');
+            return;
+        }
+        if(favorite.has(marketId)){
+            market.deleteFavorite(marketId)
+                .then(response => {
+                    if(response.data.success){
+                        const newFavorites = new Set(favorite);
+                        newFavorites.delete(marketId);
+                        setFavorite(newFavorites);
+                    }else{
+                        alert('즐겨찾기 삭제 실패');
+                    }
+                }).catch(error => {
+                    console.error("삭제 오류 :" ,error);
+                    alert('삭제 오류');
+                });
+        }else{
+            market.addFavorite(marketId)
+                .then(response => {
+                    if(response.data.success){
+                        setFavorite(new Set(favorite).add(marketId));
+                    }else{
+                        alert('즐겨찾기 추가 실패');
+                    }
+                }).catch(error =>{
+                    console.error('추가 실패 :' , error);
+                    alert('추가 실패');
+                });
+        }
+    };
+
+
+
 
     return(
         <div className='market-container'>
@@ -55,10 +111,20 @@ export default function Market(){
             <div className='product-grid'>
                 {markets.map((market) =>{
                     return(
-                    <div key={market.marketId} className='product-card' onClick={() => navigate(`/market/${market.marketId}`)}>
+                    <div key={market.marketId} className='product-card' 
+                        onClick={() => navigate(`/market/${market.marketId}`)}>
                         <img src={`http://localhost:8080${market.image}`} alt={market.image}/>
                         <h3>{market.title}</h3>
+                        <div className='favorite-area'>
                         <p>{market.price}원</p>
+                            <button className={`favorite-btn ${favorite.has(market.marketId) ? 'favorited' : ''}`}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFavorite(market.marketId);
+                                }}
+                                aria-label="즐겨찾기 토글">{favorite.has(market.marketId) ? '★' : '☆'}
+                            </button>
+                        </div>
                     </div>
                     )
                 })}

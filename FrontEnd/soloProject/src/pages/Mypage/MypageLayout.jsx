@@ -13,6 +13,7 @@ export default function MypageLayout(){
                     <li><Link to="chathistory">채팅내역</Link></li>
                     <li><Link to="mymarket">작성 거래 게시글</Link></li>
                     <li><Link to="myboard">작성 게시글</Link></li>
+                    <li><Link to="favorite">관심 목록</Link></li>
                 </ul>
             </div>
             <div className="content">

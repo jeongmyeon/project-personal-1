@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -30,6 +31,9 @@ public interface BoardMapper {
 	@Update("UPDATE board SET views = views + 1 WHERE boardId = #{boardId}")
 	int incrementViewCount(int id);
 	
-	
+	@Update("UPDATE board SET likes = likes + 1 WHERE boardId = #{boardId}")
+	int incrementRecommend(Long boardId);
 
+	@Select("SELECT b.*, u.userName FROM board b JOIN users u ON b.userId = u.id ORDER BY b.likes DESC LIMIT #{limit}")
+	List<Board> findRecommendBoard(@Param("limit") int limit);
 }

@@ -19,6 +19,10 @@ export default function marketApi(api){
         getMarketDetail : (marketId) => api.get(`/market/${marketId}`),
         createChatRoom : (buyerId, sellerId, marketId) => api.post(`/chatroom`,{buyerId, sellerId,marketId}),
         getChat : (chatRoomId) => api.get(`/chat/room/${chatRoomId}/messages`),
-        updateMarket : (marketId,data) => api.put(`/market/edit/${marketId}`,data)
+        updateMarket : (marketId,data) => api.put(`/market/edit/${marketId}`,data),
+        getFavorite: () => api.get(`/market/favorite/get`),
+        addFavorite: (marketId) => api.post(`/market/favorite/add/${marketId}`),
+        deleteFavorite: (marketId) => api.delete(`/market/favorite/delete/${marketId}`),
+        getlatestMarket: () => api.get(`/market/latest`),
     }
 }
