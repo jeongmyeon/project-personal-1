@@ -2,7 +2,7 @@ create database soloproject;
 
 use soloproject;
 
-select * from chatrooms;
+select * from board;
 drop table market;
 drop table chatRooms;
 CREATE TABLE users(
